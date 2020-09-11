@@ -1,0 +1,11 @@
+# ФКЗ-6-ФКЗ-21_03_2014.rtf ,ФКЗ-5-ФКЗ-28_06_2004.rtf, ФКЗ-5-ФКЗ-21_07_2007.rtf
+
+import string
+import re
+
+name = input('Введите расположение и название файла: ')
+text = open(name).read().split('\n')
+text = ' '.join(text)
+f_out = open('out_1.txt', 'w')
+f_out.write(text)
+f_out.close()
