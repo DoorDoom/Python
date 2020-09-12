@@ -1,0 +1,55 @@
+# ФКЗ-6-ФКЗ-21_03_2014.rtf ,ФКЗ-5-ФКЗ-28_06_2004.rtf, ФКЗ-5-ФКЗ-21_07_2007.rtf
+
+
+import re
+
+def Unite (list):
+    d=0
+    for i in range(len(list)):
+        if i+1 >= len(list):
+            break
+        if ('<' not in list[i]) & ('>'not in list[i]) & ('<' not in list[i+1]) & ('>' not in list[i+1]):
+            list[i] = list[i]+list[i+1]
+            list.pop(i+1)
+            d = d+1
+    return list, d
+
+def Convert_List_To_Sentence(text):
+    text_out = []
+    d = 1
+    text = re.sub(r'&[a-z]{4}|;|[a-zA-Z]+', ' ', text)
+    text = ''.join(text)
+    text = re.findall(r'<.*?>|[а-яА-Я ,.?!()\-0-9]+', text)
+    while (d > 0):
+        text, d = Unite(text)
+    text = [item for item in text if (item not in ' ') & (item not in '  ')]
+
+    print(text)
+    for i in range(len(text)):
+        if i+2 >= len(text):
+            break
+        if ('<' in text[i]) & ('>' in text[i]) & ('<' not in text[i+1]) & ('>' not in text[i+1]) & ('<' in text[i+2]) & ('>' in text[i+2]):
+            text_out.append(text[i+1]+'\n')
+    text_out = ''.join(text_out)
+    return text_out
+
+
+name = input('Введите расположение и название файла с расширением .rtf (если файл в 1 месте с исполняющим файлом, то можно только название): ')
+text = open(name).read().split('\n')
+text = ' '.join(text)
+
+f_out = open('out_1.txt', 'w')
+
+delete_index = text.rfind('<html>')
+text = text[delete_index:]
+delete_index = text.rfind('</html>')
+text = text[:delete_index]
+test = Convert_List_To_Sentence(text)
+# text = re.sub(r'<.*?>|&[a-z]{4}|;|[a-zA-Z]+', '', text) ver 1
+print(test)
+f_out.write(test)
+f_out.close()
+
+f_out = open('out_2.txt', 'w')
+f_out.write(test)
+f_out.close()
