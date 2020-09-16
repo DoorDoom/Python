@@ -1,3 +1,4 @@
+
 # ФКЗ-6-ФКЗ-21_03_2014.rtf ,ФКЗ-5-ФКЗ-28_06_2004.rtf, ФКЗ-5-ФКЗ-21_07_2007.rtf
 # https://petr-panda.ru/sravnvit-teksty/ - проверить пропажу данных
 import re
@@ -83,6 +84,13 @@ def Num_Sentence(list):
                 list[i] = re.sub(r'\n', '', list[i])
                 list[i] = list[i] + list[i+1]
                 list.pop(i+1)
+        if (re.findall(r'[а-я]\.[ ]+[А-Я]', list[i]) != []) & (re.findall(r'\([а-яА-Я \.:#;№,"\'?!\-0-9]+\)', list[i]) == []):
+            list[i] = re.findall(r'[0-9]\.?[а-яА-Я :#;№,"\'?!\-0-9]+\([а-яА-Я \.:#;№,"\'?!\-0-9]+\)[а-яА-Я :#;№,"\'?!\-0-9]+(?:\.|\))|[а-яА-Я :#;№,"\'?!()\-0-9]+\([а-яА-Я \.:#;№,"\'?!\-0-9]+\)[а-яА-Я :#;№,"\'?!\-0-9]+(?:\.|\))|[0-9]\.?[а-яА-Я :#;№,"\'?!\-0-9]+(?:\.|\))|[а-яА-Я :#;№,"\'?!()\-0-9]+(?:\.|\))', list[i])
+            list[i].reverse()
+            list2=list[i]
+            list.pop(i)
+            for j in range(len(list2)):
+                list.insert(i, list2[j])
         # Предыдущее Предложение заканчиается буквой или запятой, присвоение элементов к тому элементу
         if (i-1>0)&( re.findall(r'[а-я]$|[, ]$', list[i-1]) != []):
             while ( re.findall(r'[а-я]$|[, ]$', list[i-1]) != []):
@@ -94,14 +102,7 @@ def Num_Sentence(list):
         # Предложение содержит заглавную букву или входит в перечисление
         if(re.findall(r'[А-Я]', list[i]) != []) | (re.findall(r'[0-9]+\)|[0-9]+\.', list[i]) != []):
             num = num+1
-    #         text_out.append(list[i] + '\n')
             text_out.append(str(num) + ')   ' + list[i] + '\n')
-    # for j in range(len(text_out)):
-    #     text_out[j] = re.findall(r'([0-9]+\.)?[а-яА-Я :#;№,"\'?!()\-0-9]+\.|\(.*?\)|([0-9]+\))?[а-яА-Я :#;№,"\'?!()\-0-9]+\.', text_out[j])
-    # text_out = ''.join(text_out)
-    #
-    # for j in range(len(text_out)):
-    #     text_out[j]=str(j+1) + ')   ' + text_out[j] + '\n'
 
     return text_out
 
